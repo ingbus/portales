@@ -1,0 +1,50 @@
+.modal-dialog{role: "document", style: "margin: 110px auto;", }
+  .modal-content
+    .modal-header
+      %button.close{ type: "button", "data-dismiss"=>"modal", "aria-label"=>"Close"}
+        %span{"aria-hidden"=>"true"}
+          &times;
+      %h4#myModalLabel.modal-title{style: "text-transform: uppercase;"}
+        Historico de solicitudes
+    .modal-body
+      .panel.panel-default         
+        .panel-heading
+          Historial de 
+          = @insured_name
+          en 
+          = @session[0]
+        .panel-body  
+          %p
+            Póliza Nº #{@policy_number}
+          %p
+            #{SelectComboCollections.doc_types[@document_type]} : #{@document_number}
+        - if @medicament_requests.count>0    
+          %table.table
+            %thead
+              %tr
+                %th  Autorización Nº
+                %th.hidden-xs  Siniestro Nº
+                %th Fecha de Creación
+                %th{:style => "text-align:right"} 
+            %tbody
+              - @medicament_requests.each do |request|
+                %tr
+                  %td{width: "25%"}
+                    = request.acsel_request_id
+                  %td.hidden-xs{width: "25%"} 
+                    = request.claim_number
+                  %td{width: "35%"} 
+                    = request.updated_at.strftime("%d/%m/%Y %H:%M ")  
+                  %td{width: "15%", :align => "right"}  
+                    = link_to '<i class="fa fa-eye"></i> Ver Detalle'.html_safe, provider_medicaments_request_history_detail_path(:token=>@token, :id=>request.id, :document_type=>@document_type, :document_number=>@document_number,:insured_name=> @insured_name, :policy_number=>@policy_number),'data-no-turbolink' => true, remote: true, class:"btn  btn-primary btn-xs margin-top-2 history-details-req",  "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"
+
+        - else
+          %table.table
+            %thead
+              %tr
+                %th  El asegurado no posee solicitudes recientes            
+    .modal-footer
+      %button.btn.btn-primary.non-printable{"data-dismiss" => "modal", :type => "button"}
+        %i.fa.fa-times
+        Salir              
+                                  

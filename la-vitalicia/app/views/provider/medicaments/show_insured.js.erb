@@ -1,0 +1,16 @@
+
+
+$('.panel.bg-primary.pos-rlt').toggleClass('bg-primary').toggleClass('bg-info');
+$('.panel.pos-rlt.<%=@insured%>').toggleClass('bg-primary').toggleClass('bg-info');
+
+$('.arrow.bottom').hide();
+$('.arrow.bottom.b-primary').toggleClass('b-primary').toggleClass('b-info');
+$('.arrow.bottom.<%=@insured%>').toggleClass('b-primary').toggleClass('b-info');
+$('.arrow.bottom.<%=@insured%>').show();
+
+$(".panel-footer").hide("slow");
+$("#panel_insured_<%=@insured%>").show("slow");
+
+$('#insuredClaims<%=@insured%>').html("<%= escape_javascript(render 'provider/medicaments/insured_claims') %>");
+
+

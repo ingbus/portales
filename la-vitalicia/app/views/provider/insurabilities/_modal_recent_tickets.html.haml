@@ -1,0 +1,41 @@
+#modal_recent_tickets.modal.fade{tabindex: "-1", role: "dialog", "aria-labelledby" => "myModalLabel"}
+  .modal-dialog{role: "document", style: "margin: 110px auto;", }
+    .modal-content
+      .modal-header
+        %button.close{ type: "button", "data-dismiss"=>"modal", "aria-label"=>"Close"}
+          %span{"aria-hidden"=>"true"}
+            &times;
+        %h4#myModalLabel.modal-title{style: "text-transform: uppercase;"}
+          tickets recientes
+      .modal-body
+        .panel.panel-default         
+          .panel-heading
+            = @insured_name
+          .panel-body  
+            %p
+              Póliza Nº #{@policy_number}
+            %p
+              #{SelectComboCollections.doc_types[@doc_type]} : #{@doc_number}
+          - if @tickets.count>0    
+            %table.table
+              %thead
+                %tr
+                  %th  Ticket Nº
+                  %th{:style => "text-align:right"} Fecha de Creación
+              %tbody
+                - @tickets.each do |ticket|
+                  %tr
+                    %td{width: "50%"}
+                      = ticket[0]
+                    %td{width: "50%", :align => "right"} 
+                      = ticket[1].strftime("%d/%m/%Y %H:%M ")
+          - else
+            %table.table
+              %thead
+                %tr
+                  %th  El paciente no posee tickets recientes            
+      .modal-footer
+        %button.btn.btn-primary.non-printable{"data-dismiss" => "modal", :type => "button"}
+          %i.fa.fa-times
+          Salir              
+                                    

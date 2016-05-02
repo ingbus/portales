@@ -1,0 +1,5 @@
+$('.btn.btn-primary.btn-xs').button('reset');
+$('#modal_coverags_plan').modal('hide');
+$('#modal_message_prerenew').modal('hide');
+$('#modal_renewals').html("<%= escape_javascript(render 'intermediary/renewals/modal_policy_plans') %>");
+$('#modal_policy_plans').modal('show');

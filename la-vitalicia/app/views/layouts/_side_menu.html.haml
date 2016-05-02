@@ -1,0 +1,41 @@
+/ aside
+%aside#aside.app-aside.hidden-xs.bg-dark.lt.non-printable
+  .app-aside-inner{"bs-affix" => ""}
+    .app-aside-body.scrollable.hover
+      %nav{"ui-nav" => ""}
+        %ul.nav
+          %li.nav-header.h4.m-v-sm
+            = @session[2]
+          - if @session[2].to_s=="Intermediario"
+            %li
+              %a
+                %span.pull-right.text-muted
+                  %i.fa.fa-caret-down
+                %i.icon.glyphicon.glyphicon-briefcase.text-lt
+                %span.font-normal Renovación
+              %ul.nav.nav-sub.bg
+                %li{:class => active_class_menu("renewals")}
+                  = link_to 'Cartera por renovar', prerenew_intermediary_renewals_path(:token=>@token), 'data-no-turbolink' => true
+                %li{:class => active_class_menu("renewals")}
+                  = link_to 'Cartera renovada', renewal_intermediary_renewals_path(:token=>@token), 'data-no-turbolink' => true
+          - if @session[2].to_s=="Proveedor"
+            %li.active
+              %a{:href => ""}
+                %b.label.bg-primary.pull-right NUEVO
+                %i.fa.fa-database
+                %span.font-normal Consultas
+              %ul.nav.nav-sub.bg                
+                %li{:class => active_class_menu("insurabilities")}
+                  = link_to 'Consulta de Asegurabilidad', provider_insurabilities_path(:token=>@token), 'data-no-turbolink' => true
+                %li{:class => active_class_menu("medicaments")}
+                  =# link_to 'Gestión de Medicinas', provider_medicaments_path(:token=>@token), 'data-no-turbolink' => true
+    .app-aside-footer.p.text-xs.text-center
+      %span
+        %strong.text-lt Última sesión
+      .progress.progress-xs.bg.no-margin.m-h-xs.inline.w-xs
+        .progress-bar.progress-bar-info{:style => "width:100%"}
+      - if @session[3].present?
+        %span= @session[3].strftime("%d/%m/%Y %H:%M ")
+      - else
+        %span No disponible
+/ / aside

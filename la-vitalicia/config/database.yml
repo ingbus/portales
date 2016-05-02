@@ -1,0 +1,48 @@
+# SQLite version 3.x
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+#
+default: &default
+  adapter: oracle_enhanced
+  pool: 5
+  timeout: 5000
+
+development:
+  <<: *default  
+  database: //10.0.0.68:1521/vitalqa  #LA VITALICA QA
+  username: kimpus
+  password: kimpus
+
+
+  # database: //172.16.247.148:1521/xe   
+  # username: kimpus
+  # password: admin
+
+  # database: //10.0.0.66:1521/desavit  #LA VITALICA DESA
+  # username: kimpus
+  # password: kimpus01
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  # database: //10.0.0.66:1521/desavit  #LA VITALICA
+  # username: kimpus
+  # password: kimpus01
+  database: //192.168.1.6:1521/xe   
+  username: system
+  password: oracle
+
+production:
+  <<: *default  
+  database: //10.0.6.15:1521/prdvital  #LA VITALICA PROD
+  username: kimpus
+  password: kimpus1
+  # database: //10.0.0.68:1521/vitalqa  #LA VITALICA QA meanwhile
+  # username: kimpus
+  # password: kimpus
+
+

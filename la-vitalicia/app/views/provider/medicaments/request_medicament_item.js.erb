@@ -1,0 +1,49 @@
+
+
+$('#modal_container_medicament_request').html("<%= escape_javascript(render 'provider/medicaments/modal_add_medicament') %>")
+$('#modal_medicament_item_request').modal('show');
+
+function formatRepo (repo) {
+  if (repo.loading) return repo.text;
+
+  var markup = "<div class='select2-result-repository clearfix'>" +
+    
+    "<div class='select2-result-repository__meta'>" +
+      "<div class='select2-result-repository__title'>" + repo.description + "</div></div></div>";
+
+  return markup;
+}
+
+function formatRepoSelection (repo) {
+  return repo.description || repo.text;
+}
+
+
+$(".js-data-ajax").select2({
+   theme: "bootstrap",
+  ajax: {
+    url: "/api/v1/medicaments.json",
+    dataType: 'json',
+    delay: 250,
+    data: function (params) {
+      return {
+        q: params.term, // search term
+        page: params.page
+      };
+    },
+    processResults: function (data, params) {     
+      params.page = params.page || 1; 	  
+      return {
+        results: data.items,
+        pagination: {
+          more: (params.page * 30) < data.total_count
+        }        
+      };      
+    },
+    cache: true
+  },
+ escapeMarkup: function (markup) { return markup; }, 
+  minimumInputLength: 1,
+  templateResult: formatRepo,
+  templateSelection: formatRepoSelection
+});

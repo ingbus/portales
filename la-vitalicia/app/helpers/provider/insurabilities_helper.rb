@@ -1,0 +1,2 @@
+module Provider::InsurabilitiesHelper
+end

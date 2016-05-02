@@ -1,0 +1,8 @@
+.alert.alert-danger.alert-dismissible.fade.in{role: "alert", style: "margin-bottom:0px;margin-top:3px"}
+	%button.close{type: "button", "data-dismiss"=>"alert", 'aria-label'=>"Close"}
+		%span{"aria-hidden"=>"true"} &times;
+	%strong 
+	%h4 Existen inconvenientes!
+	%p
+	- @medicament_request_item.errors.messages.each do |msg|
+		%li= msg[1][0]

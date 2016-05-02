@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head> 
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+  <%= stylesheet_link_tag  'application', media: 'all', 'data-turbolinks-track' => true %>
+  
+  <%= csrf_meta_tags %>
+  <%= display_meta_tags %> 	  
+  <%= favicon_link_tag 'favicon_vit2.ico' %>
+  <%= analytics_init if Rails.env.production? %>
+  
+</head>
+
+<body>
+	<div class="app app-header-fixed ">
+		<%= render 'layouts/top'%>
+		<%= render 'layouts/side_menu'%>
+		<%= yield %>
+		<%= render 'layouts/footer'%>
+	</div>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+</body>
+</html>

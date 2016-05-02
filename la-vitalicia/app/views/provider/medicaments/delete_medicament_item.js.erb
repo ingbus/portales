@@ -1,0 +1,6 @@
+$('#medicaments-table').html("<%= escape_javascript(render 'provider/medicaments/medicaments_request') %>")
+<%if @medicament_request.medicament_request_items.present?%>
+	$('#request-options').html("<%= escape_javascript(render 'provider/medicaments/options_request_active') %>")
+<%else%>
+	$('#request-options').html("<%= escape_javascript(render 'provider/medicaments/options_request_inactive') %>")
+<%end%>

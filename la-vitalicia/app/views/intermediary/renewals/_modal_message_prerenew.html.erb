@@ -1,0 +1,78 @@
+<!-- Modal -->
+<div class="modal fade" id="modal_message_prerenew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" style="text-transform: uppercase;">PLAN <%=@description_plan%></h4>
+      </div>
+    <div class="modal-body">
+        
+            <%if @prerenewal %>
+                 <div class="alert alert-success alert-dismissible fade in" role="alert" style="margin-bottom:0px">
+                   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <strong>Se ha procesado satisfactoriamente</strong> 
+                 </div>  
+            <%else%>
+                  <div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-bottom:0px">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                      <strong>Se ha presentado un inconveniente con la pre-renovación</strong> 
+                   </div>  
+            <%end%>  
+             <ul class="list-unstyled">
+             </ul> 
+
+              <div class="panel panel-default printable">
+                <div class="panel-heading"><%=@insured[0]%> (Tomador)</div>
+                <div class="panel-body">
+                  <p><%=@insured[1]%></p>
+                  <p>Póliza Nº <%=@insured[2]%></p>
+                  <p>Vigencia <%=@insured[3].strftime("%d/%m/%Y")%> al <%=@insured[4].strftime("%d/%m/%Y")%></p>            
+                </div>
+                  <%if @prerenewal %>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th >Coberturas</th>
+                              <th style="text-align:right">Suma Asegurada</th>
+                              <th style="text-align:right">Prima Cobertura</th>                          
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                            <%@coverags_plan.each do |cov|%>  
+                              <tr>
+                                <td><%=cov[0]%></td>
+                                <td align="right"><%= number_to_currency(cov[1], locale: :es) %></td>
+                                <td align="right"><%= number_to_currency(cov[2], locale: :es) %></td>
+                                
+                              </tr>
+                            <%end%>
+                                          
+                          </tbody>
+                        </table>  
+                  <%end%>    
+             </div>
+              <%if @prerenewal %>   
+                  <div  class="row">
+                    <div class="col-md-12">
+                      <span class="badge bg-info pull-right" style="font-size: 14px!important;">
+                        Prima total: <%= number_to_currency(@total_bonus, locale: :es) %>
+                      </span>
+                    </div>  
+                  </div>
+              <%end%>    
+    </div>
+      <div class="modal-footer"> 
+           <%if @prerenewal %>            
+
+               <%= link_to '<i class="fa fa-check"></i> Aceptar'.html_safe, prerenew_intermediary_renewals_path(:token=>@token),'data-no-turbolink' => true, class:"btn btn-primary"%>
+           <%else%>
+               <%= link_to '<i class="fa fa-reply"></i> Volver'.html_safe, get_policy_plans_intermediary_renewals_path(:token=>@token, :idpolicy=>@policy_id),:remote=>true, class:"btn btn-primary non-printable"%>
+                   
+           <%end%> 
+      </div>      
+    </div>
+  </div>
+</div>
+

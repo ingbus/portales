@@ -1,0 +1,60 @@
+.modal-dialog{role: "document", style: "margin: 110px auto;", }
+  .modal-content
+    .modal-header
+      %button.close{ type: "button", "data-dismiss"=>"modal", "aria-label"=>"Close"}
+        %span{"aria-hidden"=>"true"}
+          &times;
+      %h4#myModalLabel.modal-title{style: "text-transform: uppercase;"}
+        Detalle de Solicitud
+    .modal-body
+      .panel.panel-default         
+        .panel-heading
+          Historial de 
+          = @insured[0]
+          en 
+          = @session[0]
+        .panel-body  
+          %p
+            Póliza Nº #{@insured[4]}
+          %p
+            #{SelectComboCollections.doc_types[@insured[1]]} : #{@insured[2]}
+          %p
+            Autorización Nº #{@medicament_request.acsel_request_id}  
+          %p
+            Fecha de Solicitud: #{@medicament_request.updated_at.strftime("%d/%m/%Y %H:%M ")}  
+          %p
+            Enfermedad: #{@insured[5]}  
+          %p
+            Siniestro: #{@medicament_request.claim_number}  
+        - if @medicament_request.medicament_request_items.count>0
+          %table.table
+            %thead
+              %tr
+                %th Medicamento
+                %th Cantidad
+                %th{:style => "text-align:right"}  Precio 
+            %tbody
+              - @medicament_request.medicament_request_items.each do |item|
+                %tr
+                  %td{width: "50%"}                                            
+                    = get_medicament_description(item.medicament_code.to_i)
+                  %td{width: "10%"} 
+                    = item.quantity
+                  %td{width: "30%", :align => "right"}                       
+                    = number_to_currency(item.ammount.to_f ,unit: "", separator: ",", delimiter: ".")
+                    Bs.
+                  
+        - else
+          %table.table
+            %thead
+              %tr
+                %th La solicitud no posee medicamentos.      
+    .modal-footer
+
+      = link_to '<i class="fa fa-reply"></i> Volver'.html_safe, provider_medicaments_request_history_path(:token=>@token, :insured_id => @insured_id,:document_type=>@document_type, :document_number=>@document_number,:insured_name=> @insured_name, :policy_number=>@policy_number),'data-no-turbolink' => true, remote: true, class:"btn  btn-primary margin-top-2","data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"
+
+     
+      %button.btn.btn-primary.non-printable{"data-dismiss" => "modal", :type => "button"}
+        %i.fa.fa-times
+        Salir              
+                                  

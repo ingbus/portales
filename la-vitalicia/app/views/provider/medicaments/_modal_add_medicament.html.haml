@@ -1,0 +1,41 @@
+#modal_medicament_item_request.modal.fade{role: "dialog", "aria-labelledby" => "myModalLabel"}
+  .modal-dialog{role: "document", style: "margin: 110px auto;", }
+    .modal-content
+      = form_for @medicament_request_item, html: {:method => :post},  :url => { :controller => "medicaments", :action => "create_medicament_item"}, remote: true do |f|  
+        = hidden_field_tag :token, @token
+        = f.hidden_field :medicament_request_id, value: @medicament_request_id || @medicament_request_item.medicament_request_id
+        .modal-header
+          %button.close{ type: "button", "data-dismiss"=>"modal", "aria-label"=>"Close"}
+            %span{"aria-hidden"=>"true"}
+              &times;
+          %h4#myModalLabel.modal-title{style: "text-transform: uppercase;"}
+            Incluir Medicamento
+        .modal-body
+          .panel.panel-default         
+            .panel-heading
+              Aqui podrá incluir un medicamento especifico              
+            .panel-body  
+              #alert-msg
+              .form-group.top-div-10
+                %label{:for => "exampleInputEmail1"} Medicamento (*)                         
+                = f.collection_select :medicament_code,   @medicaments,:first,:last, {:prompt => "Selecciona un medicamento", :selected => @medicament_request_item.medicament_code},{:class=>'js-data-ajax'}
+
+                  
+              .form-group
+                %label{:for => "exampleInputPassword1"} Precio (*)                
+                
+                %div.input-group  
+                  = f.text_field :ammount, placeholder: "Precio unitario" , class: "form-control", value: number_to_currency(@medicament_request_item.ammount ,unit: "", separator: ",", delimiter: "")
+                  .input-group-addon 
+                    ,00
+              .form-group
+                %label{:for => "exampleInputPassword1"} Cantidad (*)               
+                = f.number_field :quantity, :class=>"form-control", :placeholder=>"Cantidad de medicamentos"
+                
+            
+        .modal-footer
+          = f.submit "Agregar", :class=>"btn btn-primary create-item marginb-5",  'data-no-turbolink' => true, "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"
+          %button.btn.btn-primary.non-printable.marginb-5{"data-dismiss" => "modal", :type => "button", :onclick=>"$('.btn.btn-primary.create').button('reset');"}
+            %i.fa.fa-times
+            Salir              
+                                    

@@ -1,0 +1,22 @@
+%table#mainPolicies.table.table-responsive
+  %thead
+    %th Medicamento
+    %th Precio
+    %th Cantidad
+    
+  -if @medicament_request.medicament_request_items.count>0  
+    - @medicament_request.medicament_request_items.each do |item|
+      %tr
+        %td{:width => "40%"}          
+          = get_medicament_description(item.medicament_code.to_i)        
+        %td{:width => "20%"}          
+          = number_to_currency(item.ammount.to_f ,unit: "", separator: ",", delimiter: ".")
+          Bs.
+        %td{:width => "10%"}
+          = item.quantity        
+  -else
+    %tr
+      %td{:width => "100%"}        
+        Debes agregar uno o más medicamento para procesar la solicitud
+
+    

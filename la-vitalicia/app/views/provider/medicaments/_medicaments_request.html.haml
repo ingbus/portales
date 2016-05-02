@@ -1,0 +1,25 @@
+%table#mainPolicies.table.table-responsive
+  %thead
+    %th Medicamento
+    %th.hidden-xs Precio
+    %th.hidden-xs Cantidad
+    %th
+  -if @medicament_request.medicament_request_items.count>0  
+    - @medicament_request.medicament_request_items.each do |item|
+      %tr
+        %td{:width => "40%"}                    
+          = get_medicament_description(item.medicament_code.to_i)        
+        %td.hidden-xs{:width => "20%"}          
+          = number_to_currency(item.ammount.to_f ,unit: "", separator: ",", delimiter: ".")
+          Bs.
+        %td.hidden-xs{:width => "10%"}
+          = item.quantity
+        %td{:width => "15%", :align=> "center"}  
+          = link_to '<i class="fa fa-trash"></i> Eliminar'.html_safe, provider_medicaments_delete_medicament_item_path(:token=>@token, :id=>item.id),'data-no-turbolink' => true, remote: true, "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');", class:"btn  btn-danger btn-xs margin-top-2"
+          = link_to '<i class="fa fa-pencil-square-o"></i> Modificar'.html_safe, provider_medicaments_edit_medicament_item_path(:token=>@token, :id=>item.id),'data-no-turbolink' => true, remote: true, "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');", class:"btn  btn-primary btn-xs edit margin-top-2"
+  -else
+    %tr
+      %td{:width => "100%"}        
+        Debes agregar uno o más medicamento para procesar la solicitud
+
+    

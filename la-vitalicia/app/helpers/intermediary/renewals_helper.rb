@@ -1,0 +1,2 @@
+module Intermediary::RenewalsHelper
+end

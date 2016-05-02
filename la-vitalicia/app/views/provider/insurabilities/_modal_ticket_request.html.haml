@@ -1,0 +1,18 @@
+#modal_ticket_request.modal.fade{tabindex: "-1", role: "dialog", "aria-labelledby" => "myModalLabel"}
+  .modal-dialog{role: "document", style: "margin: 110px auto;"}
+    .modal-content
+      .modal-header
+        %button.close{ type: "button", "data-dismiss"=>"modal", "aria-label"=>"Close"}
+          %span{"aria-hidden"=>"true"}
+            &times;
+        %h4#myModalLabel.modal-title{style: "text-transform: uppercase;"}
+          solicitud de ticket
+      .modal-body
+        %h4
+          = "¿Está seguro que desea crear un ticket para el paciente #{@insured_name}?"
+      .modal-footer
+        .row
+          .col-md-6
+            = link_to 'Crear'.html_safe, provider_insurabilities_create_ticket_path(:token=>@token, :policy_id=>@policy_id, :insured_number=>@insured_number, :area_code=>@area_code, :mobile_phone =>@mobile_phone),:remote=>true, class:"btn btn-primary btn-lg btn-block", :style=>"margin-top: 2px;" , "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"
+          .col-md-6                                 
+            = link_to 'Cancel'.html_safe, provider_insurabilities_cancel_request_path(:token=>@token),:remote=>true, class:"btn btn-primary btn-lg btn-block", :style=>"margin-top: 2px;" , "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"  

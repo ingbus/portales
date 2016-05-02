@@ -1,0 +1,8 @@
+
+<%if @save%>
+	$('#medicaments-table').html("<%= escape_javascript(render 'provider/medicaments/medicaments_request') %>")
+	$('#modal_medicament_item_request').modal('hide');
+<%else%>
+	$('#alert-msg').html("<%= escape_javascript(render 'provider/medicaments/alert_error_medicament_item') %>")	
+	$('.btn.btn-primary.edit-item').button('reset');
+<%end%>	

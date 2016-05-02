@@ -1,0 +1,63 @@
+- set_meta_tags :title => "Solicitud de Medicamentos | Seguros La Vitalicia C.A."
+
+- description "Solicitud de Medicamentos para proveedores de Seguros La Vitalicia" 
+
+
+#content.app-content.non-printable{role: "main"}
+
+  .p-h-md.p-v.bg-white.box-shadow.pos-rlt
+    .pull-right.hidden-xs.w
+    %h3.no-margin 
+      Solicitud de Medicamento del Siniestro
+      = "Nº #{@claim_id}"
+
+  .p-md
+    .panel.panel-default
+      .panel-heading{style: "text-transform: uppercase;"}
+        Proveedor: #{@name_prvdr}
+      .panel-body
+        #alert-container-provider-insurabilities
+          .alert.alert-warning.alert-dismissible.fade.in{role: "alert", style: "margin-bottom:0px"}
+            %button.close{type: "button", "data-dismiss"=>"alert", 'aria-label'=>"Close"}
+              %span{"aria-hidden"=>"true"} ×
+            %i.fa.fa-info-circle  
+            %strong En este paso 
+            podra incluir medicamentos relacionados a la enfermedad del siniestro.
+          - flash.each do |key, value|
+            .alert.alert-danger.alert-dismissible.fade.in{:role => "alert", :style => "margin-bottom:0px;margin-top:3px"}
+              %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => "button"}
+                %span{"aria-hidden" => "true"} &times;
+              %i.fa.fa-ban  
+              %strong
+                = value
+        .panel.panel-default.margin-10
+          .panel-body
+            %p
+              Asegurado: #{@insured[0]}
+            %p  
+              = @document_type_info
+              = @insured[2]
+            %p
+              = @insured[3]  
+              de la Póliza
+            %p
+              Póliza Nª
+              = @insured[4]   
+            %p
+              Enfermedad:
+              = @insured[5] 
+        .panel.panel-default.margin-10
+          .panel-body
+            .pull-right
+              = link_to '<i class="fa fa-plus-circle"></i> Nuevo Medicamento'.html_safe, provider_medicaments_request_medicament_item_path(:token=>@token, :medicament_request_id=>@medicament_request.id),'data-no-turbolink' => true, remote: true, class:"btn btn-primary create marginb-5 margin-top-2", "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');" 
+            #medicaments-table
+              = render 'provider/medicaments/medicaments_request'    
+        
+        #request-options.pull-right  
+          = render @medicament_request.medicament_request_items.present? ? 'provider/medicaments/options_request_active' : 'provider/medicaments/options_request_inactive'
+        .pull-right
+          = link_to '<i class="fa fa-ban"></i> Cancelar'.html_safe, provider_medicaments_index_path(:token=>@token, :area_code=>@area_code, :mobile_phone=>@mobile_phone, :document_type=>@document_type, :document_number=>@document_number, :commit =>true),'data-no-turbolink' => true,  class:"btn btn-primary create margin-top-2",  "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"   
+          
+#modal_container_medicament_request
+            
+

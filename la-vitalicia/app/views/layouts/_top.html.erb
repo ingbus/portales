@@ -1,0 +1,56 @@
+  <header id="header" class="app-header navbar bg-primary non-printable" role="menu">
+          <!-- navbar header -->
+      <div class="navbar-header box-shadow-inset dk">
+        <button class="pull-right visible-xs" ui-toggle="show" target=".navbar-collapse">
+          <i class="ti-settings"></i>
+        </button>
+        <button class="pull-right visible-xs" ui-toggle="show" target=".app-aside">
+          <i class="ti-menu"></i>
+        </button>
+        <!-- brand -->      
+
+        <%= link_to provider_insurabilities_path(:token=>@token), 'data-no-turbolink' => true do %>
+          <%= image_tag 'logo.png'%>  
+        <%end%>
+        
+        <!-- / brand -->
+      </div>
+      <!-- / navbar header -->
+
+      <!-- navbar collapse -->
+      <div class="navbar-collapse hidden-xs">
+        
+
+        <!-- nabar right -->
+        <ul class="nav navbar-nav navbar-right m-r-n">
+          
+          <li class="dropdown">            
+            <a href="#" class="clear no-padding-h" data-toggle="dropdown">              
+              <%= image_tag "user.png", class:"navbar-img pull-right" %>
+              <span class="hidden-sm m-l"><%= @session[0]%></span>
+              <b class="caret m-h-xs hidden-sm"></b>
+            </a>
+            <ul class="dropdown-menu pull-right no-b-t">              
+              <li>
+                 <a href="http://lavitalicia.com">Pagina Principal</a>
+              </li>
+              <li class="divider"></li>              
+              <li>
+                <a href="http://lavitalicia.com/">Salir</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- home -->
+          <li class="active">
+            <%= link_to provider_insurabilities_path(:token=>@token), 'data-no-turbolink' => true do %>       
+              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+             <%end%>
+          </li>
+
+      </ul>
+     
+      </div>
+      <!-- / navbar collapse -->
+  </header>
+  

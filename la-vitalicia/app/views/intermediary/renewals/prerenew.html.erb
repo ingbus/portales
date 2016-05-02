@@ -1,0 +1,159 @@
+<% set_meta_tags :title => "Cartera por renovar | Seguros La Vitalicia C.A."  %>
+
+<% description "Pre-Renovación de Pólizas para intermediarios de Seguros La Vitalicia" %>
+
+
+<div id="content" class="app-content non-printable" role="main">
+
+	<div class="p-h-md p-v bg-white box-shadow pos-rlt">
+	  	<div class="pull-right hidden-xs w"></div>
+	  	<h3 class="no-margin">Cartera por Renovar</h3>
+	</div>
+
+	<div class="p-md">
+		<div class="panel panel-default">
+	      	<div class="panel-heading" style="text-transform: uppercase;" >Intermediario: <%= @name_inter%></div>
+	      	<div class="panel-body">
+           
+           		<div class="alert alert-warning alert-dismissible fade in" role="alert" style="margin-bottom:0px">
+		      		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+		      		<strong>Listado de las Pólizas a pre-renovar</strong> puede realizar la impresión y/o pre-renovar la poliza con las planes disponbles.
+		    	</div>	
+
+		    	<% flash.each do |key, value| %>
+			      	<div class="alert alert-success alert-dismissible fade in" role="alert" style="margin-bottom:0px;margin-top:3px">
+			      		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			      		<strong>
+			        		<%= value %>
+			        	</strong>
+			      	</div>
+			    <% end %>
+          	</div>
+     	
+    		<div id="div_search" <% if @policy_search.present?  || @office_search.present? %>    style="display:none" <%end%> >
+      			<%= form_tag prerenew_intermediary_renewals_path, :method => :get do %>
+          			<div class="panel panel-default">
+             			<div class="panel-heading">
+                			<div class="input-group">
+              	  	  			<%= text_field_tag "search", @name_search, :class=>"form-control", :placeholder=>"Se puede buscar por el nombre o apellido del tomador" %>        
+      		        
+      		          			<%=  hidden_field_tag(:token, @token)%> 
+            		  			<span class="input-group-btn">            
+              						<%= submit_tag "Búsqueda", :class=>"btn btn-primary" , "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"%>
+            		  				<a href="#" class="btn btn-primary" onclick="$('#div_adv_search').show('slow'); $('#div_search').hide('slow');">Búsqueda Avanzada</a>
+            		  			</span>
+   		        			</div>
+   		      			</div>
+   					</div><!-- /input-group -->
+     			<%end%>
+   			</div>
+
+   
+            <div id="div_adv_search" <% if !@policy_search.present? && !@office_search.present? %> style="display:none" <%end%> >
+      			<%= form_for '', html: {:id => 'adv_search_form' , :method => :get, :class=> "form-inline" },  :url => { :controller => "renewals", :action => "prerenew"} do |f| %>
+
+		      		<div class="col-lg-12" align="center">
+			      		<div class="panel panel-default">
+			        		<div class="panel-body">
+			           			<div class="form-group">
+			           				<label class="sr-only" for="exampleInputEmail2">Nombre Tomador</label>
+			          
+			           				<%= f.text_field :search, :class=>"form-control", :placeholder=>"Nombre del tomador", :value => @name_search %> 
+			             				 <%= f.hidden_field :token, :value => @token %>
+			            		</div>
+			            		<div class="form-group">
+			              			<div class="input-group">
+			                			<%= f.text_field :searchpolicy, :class=>"form-control", :placeholder=>"Número de Póliza", :value => @policy_search %> 
+		              				</div>
+		            			</div>
+								<%= f.collection_select :searchoffice, @data_oficce,:first,:last, {:prompt => "Oficinas",  :selected => @office_search},{:class=>'form-control', "data-placeholder" => "Oficinas" } %>
+
+						 	           			            		
+			            		<%= submit_tag "Búsqueda", :class=>"btn btn-primary" , "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"%>
+			            		<%= link_to 'Regresar'.html_safe, prerenew_intermediary_renewals_path(:token=>@token),'data-no-turbolink' => true, class:"btn btn-primary"%>
+			          
+			        		</div>
+			    		</div>
+			 		</div>
+       			<% end %>
+     		</div>
+	  	  	  	  
+     		<table id="mainPolicies" class="table table-responsive sortable-theme-bootstrap" data-sortable>    
+	    		<thead>
+    	      		<th data-sorted="true" data-sorted-direction="descending" class="hidden-xs">Producto</th>
+			      	<th data-sorted="true" data-sorted-direction="descending" class="hidden-xs hidden-sm">Oficina</th>
+			      	<th data-sorted="true" data-sorted-direction="descending">Poliza </th>
+			      	<th data-sorted="true" data-sorted-direction="descending">Tomador</th>
+			      	<th data-sorted="true" data-sorted-direction="descending" class="hidden-xs hidden-sm">Fecha</th>
+			      	<th></th>
+			    </thead> 	
+				<%@data.each do |pre_renova|%>	
+					
+					<tr>
+						<td width="15%" class="hidden-xs"> <%=pre_renova[0]%> </td>
+						<td width="10%" class="hidden-xs hidden-sm"> <%=pre_renova[1]%> </td>
+						<td width="10%"><button class="btn btn-success btn-xs"><%=pre_renova[2]%></button> </td>
+						<td width="25%"><%=pre_renova[3]%> </td>
+						<td width="10%" class="hidden-xs hidden-sm"><%=pre_renova[5].strftime("%d/%m/%Y")%> </td>
+						<td width="25%"> 
+
+                        
+                        <%= link_to '<i class="fa fa-briefcase"></i> Planes Disponibles'.html_safe, get_policy_plans_intermediary_renewals_path(:token=>@token, :idpolicy=>pre_renova[4]),:remote=>true, class:"btn  btn-primary btn-xs", "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');", :style=>"margin-top: 2px;"%>
+						
+						<%= link_to '<i class="fa fa-undo"></i> No Renovar'.html_safe, get_not_renewal_policy_intermediary_renewals_path(:token=>@token, :idpolicy=>pre_renova[4],:codeoffice=>pre_renova[2]),'data-no-turbolink' => true, class:"btn  btn-primary btn-xs", :style=>"margin-top: 2px;",
+		     			 	data: { confirm:
+		          				     "¿Esta seguro de no querer renovar esta póliza?"
+		           				   }%>     
+						</td>
+				    </tr>	
+				    	
+				<%end%>
+			</table>	
+		</div>
+		<nav>  
+			<ul class="pagination" style="margin: 0px;">
+			   
+			   <% if @total_pages > 1 %> 
+			            <% if @page.to_i-1 >= 1 %>
+						       <li>
+						       	 <%= link_to '<span aria-hidden="true">&laquo;</span>
+						         <span class="sr-only">Previous</span>'.html_safe, prerenew_intermediary_renewals_path(:token=>@token,:page=>@page.to_i-1,:searchpolicy=>@policy_search,:searchoffice=>@office_search), 'data-no-turbolink' => true %>
+			                   </li>
+						<%else%>
+						      <li class="disabled">
+						        <a href="#" aria-label="Previous">
+						           <span aria-hidden="true">&laquo;</span>
+						           <span class="sr-only">Previous</span>
+						        </a>
+						      </li>
+						<%end%>    
+		              
+					   <% for i in (1..@total_pages)  %>
+					       <li <% if @page.to_i == i.to_i  %> class="active" <% end %> >
+					        
+					         <%= link_to i, prerenew_intermediary_renewals_path(:token=>@token,:page=>i,:searchpolicy=>@policy_search,:searchoffice=>@office_search), 'data-no-turbolink' => true %>
+					        </li>
+					   <%end%>
+					   <% if @page.to_i+1 <= @total_pages.to_i%>
+						       <li>
+						       	 <%= link_to '<span aria-hidden="true">&raquo;</span>
+						         <span class="sr-only">Next</span>'.html_safe, prerenew_intermediary_renewals_path(:token=>@token,:page=>@page.to_i+1,:searchpolicy=>@policy_search,:searchoffice=>@office_search), 'data-no-turbolink' => true %>
+			                   </li>
+			            <%else%>
+						       <li class="disabled">
+						           <a href="#" aria-label="Next">
+						               <span aria-hidden="true">&raquo;</span>
+						               <span class="sr-only">Next</span>
+						           </a>
+			                   </li>
+			            <%end%>
+	            <%end%>   
+			</ul>
+		</nav>
+	</div>		
+</div>
+
+
+<div id="modal_renewals"></div>
+<div id="modal_renewals_coverags"></div>
+<div id="modal_renewals_prerenew"></div>

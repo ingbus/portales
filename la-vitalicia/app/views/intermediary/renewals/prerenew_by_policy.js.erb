@@ -1,0 +1,6 @@
+$('#modal_policy_plans').modal('hide');
+$('#modal_coverags_plan').modal('hide');
+$('#modal_renewals_prerenew').html("<%= escape_javascript(render 'intermediary/renewals/modal_message_prerenew') %>");
+$('#modal_message_prerenew').modal({
+     backdrop:'static', show: true
+});

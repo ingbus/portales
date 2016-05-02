@@ -1,0 +1,23 @@
+%table#mainPolicies.table.table-responsive
+  %thead
+    %th Siniestro Nº
+    %th.hidden-xs.hidden-sm Descripción
+    %th.hidden-xs Fecha
+    %th
+  -if @claims.count>0  
+    - @claims.each do |claim|
+      %tr
+        %td{:width => "20%"}
+          = claim[3]
+        %td.hidden-xs.hidden-sm{:width => "40%"}
+          = claim[4]
+        %td.hidden-xs{:width => "20%"}
+          = claim[5].strftime("%d/%m/%Y")
+        %td{:width => "25%"}  
+          = link_to '<i class="fa fa-folder-open"></i> Solicitar Medicamento'.html_safe, provider_medicaments_request_medicament_path(:token=>@token, :claim_id=>claim[2],:claim_number=>claim[3],:insured_id=>claim[1], :area_code=>@area_code, :mobile_phone=>@mobile_phone, :document_type=>@document_type, :document_number=>@document_number),'data-no-turbolink' => true, class:"btn  btn-success btn-xs margin-top-2", "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"
+  -else
+    %tr
+      %td{:width => "100%"}        
+        No existen siniestros creados para este asegurado
+
+    

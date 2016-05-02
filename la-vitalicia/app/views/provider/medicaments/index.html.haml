@@ -1,0 +1,132 @@
+- set_meta_tags :title => "Gestión de Medicamentos | Seguros La Vitalicia C.A."
+
+- description "Gestión de Medicamentos para proveedores de Seguros La Vitalicia" 
+
+
+#content.app-content.non-printable{role: "main"}
+
+  .p-h-md.p-v.bg-white.box-shadow.pos-rlt
+    .pull-right.hidden-xs.w
+    %h3.no-margin Gestión de Medicamentos
+
+  .p-md
+    .panel.panel-default
+      .panel-heading{style: "text-transform: uppercase;"}
+        = "Proveedor: #{@name_prvdr}"
+      .panel-body
+        #alert-container-provider-insurabilities
+          .alert.alert-warning.alert-dismissible.fade.in{role: "alert", style: "margin-bottom:0px"}
+            %button.close{type: "button", "data-dismiss"=>"alert", 'aria-label'=>"Close"}
+              %span{"aria-hidden"=>"true"} ×
+            %i.fa.fa-info-circle  
+            %strong Esta consulta 
+            permite visualizar todas las pólizas del usuario sobre las cuales se puede realizar una solicitud de medicamento. Las pólizas que se ecuentren excedidas en la cobertura de medicamentos o no posean la cobertura, no podrán realizar la solcitud.
+          - flash.each do |key, value|
+            .alert.alert-danger.alert-dismissible.fade.in{:role => "alert", :style => "margin-bottom:0px;margin-top:3px"}
+              %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => "button"}
+                %span{"aria-hidden" => "true"} &times;
+              %i.fa.fa-ban  
+              %strong
+                = value  
+      
+        #searh_container{:align => "center", :style=>"padding-top:6px"}        
+          = form_for '', html: {:id => 'adv_search_form' , :method => :get, :class=> "form-inline" },  :url => { :controller => "medicaments", :action => "index"} do |f|
+            = f.hidden_field :token, :value => @token
+            .panel.panel-default
+              .panel-body
+                .form-group
+                  %label.sr-only{:for => "area_code"} Código de area                 
+                  = f.collection_select :area_code, SelectComboCollections.area_codes,:first,:last, {:prompt => "Código de área",  :selected => @area_code},{:class=>'form-control', "data-placeholder" => "Código de área", :style=>"margin-bottom: 5px;" }
+                .form-group
+                  %label.sr-only{:for => "mobile_phone"} Número de telefono                                    
+                  = f.text_field :mobile_phone, :class=>"form-control", :placeholder=>"Número de telefono", :value => @mobile_phone, :style=>"margin-bottom: 5px;" 
+                &nbsp;
+                &nbsp;  
+                .form-group  
+                  %label.sr-only{:for => "document_type"} Tipo de documento
+                  = f.collection_select :document_type, SelectComboCollections.doc_types,:first,:last, {:prompt => "Tipo de documento",  :selected => @document_type},{:class=>'form-control', "data-placeholder" => "Tipo de documento", :style=>"margin-bottom: 5px;" }
+                .form-group
+                  %label.sr-only{:for => "document_number"} Número de documento                                    
+                  = f.text_field :document_number, :class=>"form-control", :placeholder=>"Número de documento", :value => @document_number, :style=>"margin-bottom: 5px;"   
+                &nbsp;                  
+                = f.submit "Buscar Asegurado", :class=>"btn btn-primary", :style=>"margin-bottom: 5px;", 'data-no-turbolink' => true, "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"
+
+            #detail_container{:align => "left"}                
+              .panel.b-a
+                .panel-heading
+                  Asegurados encontrados                 
+                  %span.badge.bg-info 
+                    - if @insureds.present?
+                      =@insureds.count||0
+                    - else
+                      0  
+                - if @insureds
+                  - if @insureds.count > 0
+                    .panel-body.grey-body-panel
+                      .row.text-center
+                        - # process the first element of the record set
+                        .col-sm-4{:style=>"padding-right:5px;padding-left:5px"}  
+                          = link_to provider_medicaments_show_insured_path(:token=>@token, :insured=>0, :policy_id => @insureds[0][0], :insured_id => @insureds[0][1],:area_code=>@area_code, :mobile_phone=>@mobile_phone, :document_type=>@document_type, :document_number=>@document_number), :remote=>true do  
+                            .panel.bg-primary.pos-rlt{:style=>"margin-bottom: 5px;", :class=>"#{0}"}
+                              %span{:class=>"arrow bottom b-primary #{0}"}
+                              .panel-body  
+                                %i.fa.fa-certificate                              
+                                = @insureds[0][5] #nombre
+                                = "(#{(@insureds[0][8]=='S' ? 'Titular' : @insureds[0][6])})"
+                        - # process the next elements of the record
+                        - @insureds[1..-1].each_with_index do |insured, index|                      
+                          .col-sm-4{:style=>"padding-right:5px;padding-left:5px"}  
+                            = link_to provider_medicaments_show_insured_path(:token=>@token, :insured=>index+1, :policy_id => insured[0], :insured_id => insured[1], :area_code=>@area_code, :mobile_phone=>@mobile_phone, :document_type=>@document_type, :document_number=>@document_number), :remote=>true do  
+                              .panel.bg-info.pos-rlt{:style=>"margin-bottom: 5px;", :class=>"#{index+1}"}
+                                %span{:class=>"arrow bottom b-info #{index+1}", :style=>"display:none"}
+                                .panel-body      
+                                  %i.fa.fa-user                          
+                                  = insured[5] #nombre
+                                  = "(#{(insured[8]=='S' ? 'Titular' : insured[6])})"
+                    -@insureds.each_with_index do |insured, index|                       
+                      .panel-footer{:style=> index==0 ? "display:true" :  "display:none", :id=>"panel_insured_#{index}"}
+                        
+                        .panel.panel-default
+                          .panel-body
+                            .row
+                              .col-md-8
+                                %h3 
+                                  = insured[5] #nombre                          
+                                  &nbsp;
+
+                                  - if insured[10] =="ACT"
+                                    %span.label.bg-success{:style=>"font-size: 55%;"} ACTIVO
+                                  
+                                  - else  
+                                    %span.label.bg-danger{:style=>"font-size: 55%;"} NO ACTIVO
+                                %h4
+                                  = "Póliza Nº #{insured[9]}"
+                                %h4
+                                  = SelectComboCollections.doc_types[insured[2]] #doctype
+                                  = ": #{insured[3]}" #numdoc
+                                                                                                                  
+                              .col-md-4
+                                .pull-right.top-div-20
+                                  = link_to '<i class="fa fa-archive"></i> Historial de Solicitudes'.html_safe, provider_medicaments_request_history_path(:token=>@token, :insured_id => insured[1],:document_type=>insured[2], :document_number=>insured[3],:insured_name=> insured[5], :policy_number=>insured[9]),'data-no-turbolink' => true, remote: true, class:"btn btn-primary request-history marginb-5 margin-top-2", "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"
+                            .row
+                              .col-md-12
+                                %div{:id=>"insuredClaims#{index}"}                          
+                                  = render 'provider/medicaments/insured_claims' if index==0   
+                            
+                            
+                  -else
+                    .panel-footer
+                      .well                        
+                        %h4 
+                          %i.fa.fa-warning
+                          No se han encontrados asegurados validos con los datos ingresados              
+                -else
+                  .panel-footer
+                    .well
+                      %h4 Para obtener resultados de la búsqueda debe ingresar datos validos del asegurado
+                      
+                    
+
+#modal_container_request_history
+  #modal_request_history.modal.fade{tabindex: "-1", role: "dialog", "aria-labelledby" => "myModalLabel1"}
+

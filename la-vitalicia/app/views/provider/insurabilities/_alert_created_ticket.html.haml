@@ -1,0 +1,13 @@
+- if @ticket_number == "0" 
+	.alert.alert-danger.alert-dismissible.fade.in{role: "alert", style: "margin-bottom:0px;margin-top:3px"}
+		%button.close{type: "button", "data-dismiss"=>"alert", 'aria-label'=>"Close"}
+			%span{"aria-hidden"=>"true"} &times;
+		%strong 
+			= "El ticket no pudo ser creado. El proveedor no cuenta con permiso para generarlo."
+- else
+	.alert.alert-success.alert-dismissible.fade.in{role: "alert", style: "margin-bottom:0px;margin-top:3px"}
+		%button.close{type: "button", "data-dismiss"=>"alert", 'aria-label'=>"Close"}
+			%span{"aria-hidden"=>"true"} &times;
+		%strong 
+			%i.fa.fa-thumbs-up
+			= "El ticket Nº #{@ticket_number} fue creado exitosamente."

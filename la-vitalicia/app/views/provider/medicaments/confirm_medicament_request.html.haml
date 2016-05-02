@@ -1,0 +1,53 @@
+- set_meta_tags :title => "Solicitud de Medicamentos Procesada | Seguros La Vitalicia C.A."
+
+- description "Solicitud de Medicamentos Procesada para proveedores de Seguros La Vitalicia" 
+
+
+#content.app-content.printable{role: "main"}
+
+  .p-h-md.p-v.bg-white.box-shadow.pos-rlt
+    .pull-right.hidden-xs.w
+    %h3.no-margin 
+      Autorización de Medicamento del Siniestro
+      = "Nº #{@medicament_request.claim_id}"
+
+  .p-md
+    .panel.panel-default
+      .panel-heading{style: "text-transform: uppercase;"}
+        Proveedor: #{@name_prvdr}
+      .panel-body
+        #alert-container-provider-medicament          
+          - flash.each do |key, value|            
+            %div{:class => key=="success" ? "alert alert-success alert-dismissible fade in" : "alert alert-danger alert-dismissible fade in" , :role => "alert", :style => "margin-bottom:0px;margin-top:3px" }
+            
+              %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => "button"}
+                %span{"aria-hidden" => "true"} &times;
+              %i{:class=>  key=="success" ? "fa fa-thumbs-up" : "fa fa-ban"}                
+              %strong
+                = value
+        .panel.panel-default.margin-10
+          .panel-body
+            %p
+              Asegurado: #{@insured[0]}
+            %p  
+              = @document_type_info
+              = @insured[2]
+            %p
+              = @insured[3]  
+              de la Póliza
+            %p
+              Póliza Nª
+              = @insured[4]   
+            %p
+              Enfermedad:
+              = @insured[5] 
+        .panel.panel-default.margin-10
+          .panel-body            
+            #medicaments-table
+              = render 'provider/medicaments/medicaments_views'    
+        .pull-right
+
+          = link_to '<i class="fa fa-search"></i> Volver al Buscador'.html_safe, provider_medicaments_path(:token=>@token),'data-no-turbolink' => true,  class:"btn btn-primary create margin-top-2 non-printable",  "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"          
+          = link_to '<i class="fa fa-print"></i> Imprimir Autorización'.html_safe, provider_medicaments_confirm_medicament_request_path(:token=>@token, :id=>@medicament_request.id),'data-no-turbolink' => true,  class:"btn btn-primary create margin-top-2 non-printable",data: { confirm:"¿Esta seguro de procesar la orden de medicamentos?"}, "data-loading-text"=>"Procesando...", :onclick=>"$(this).button('loading');"          
+        
+    
